@@ -30,7 +30,6 @@ public class Main {
         }
         printOrderList();
         System.out.println("\nСтоимость вашего заказа составляет: " + getOrderPrice() + " " + RUB);
-
     }
 
     private static void printMenu() {
@@ -52,7 +51,6 @@ public class Main {
             if (product.getCount() > 0) {
                 System.out.print(product.getName() + "- " + product.getCount() + " шт. \n");
             }
-
         }
     }
 
