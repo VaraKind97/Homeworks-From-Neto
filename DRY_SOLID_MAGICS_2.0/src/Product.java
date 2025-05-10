@@ -1,4 +1,4 @@
-abstract class Product implements Discount {
+abstract class Product{
 
     protected String name;
     protected int price;
