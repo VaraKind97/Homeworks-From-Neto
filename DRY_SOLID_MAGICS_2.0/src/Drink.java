@@ -4,5 +4,4 @@ public class Drink extends Product {
         super(name, price, weight);
 
     }
-
 }
