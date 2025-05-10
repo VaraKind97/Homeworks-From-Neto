@@ -17,7 +17,7 @@ public class Main {
         menu.add(new Drink("Святой источник", 40, "1л"));
         menu.add(new Alcohol("Пиво", 100, "0.5л"));
         menu.add(new Alcohol("Вино", 500, "0.3л"));
-        System.out.println("Добро пожаловать в наш ресторан!\n");
+        System.out.println("Добро пожаловать в наш онлайн Фудстор!\n");
         printMenu();
         Scanner scanner = new Scanner(System.in);
         while (true) {
