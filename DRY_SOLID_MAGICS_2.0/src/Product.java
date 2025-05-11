@@ -3,7 +3,7 @@ abstract class Product {
     protected String name;
     protected int price;
     protected String weight;
-    private int count;
+    protected int count;
 
     public Product(String name, int price, String weight) {
         this.name = name;
