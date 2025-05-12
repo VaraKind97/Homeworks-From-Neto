@@ -1,7 +1,8 @@
 import java.time.LocalTime;
 
 public class Alcohol extends Product implements Drink, StopList { //Interface Segregation Principle,
-////так как не каждую категорию нужно добавлять в StopList
+//так как не каждую категорию нужно добавлять в StopList
+//Dependency Inversion Principle - разделив интерфейсы, мы можем поменять один интерфейс на другой
     public Alcohol(String name, int price, String weight) {
         super(name, price, weight);
     }
