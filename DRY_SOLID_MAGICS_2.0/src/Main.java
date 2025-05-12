@@ -61,14 +61,14 @@
             Product product = it.next();
             totalPrice += product.getCount() * product.getPrice();
             if (product instanceof Alcohol) {
-                int priceOfAl0cohol = ((Alcohol) product).getPrice();
-                int totalPriceOfAl0cohol = priceOfAl0cohol * product.getCount();
+                int priceOfAlcohol = ((Alcohol) product).getPrice();
+                int totalPriceOfAlcohol = priceOfAlcohol * product.getCount();
                 ((Drink) product).checkAge("Введите ваш возраст!");
                 Scanner scanner = new Scanner(System.in);
                 int age = scanner.nextInt();
                 if (age < 18) {
                     System.out.println("Вы несовершеннолетний и не можете приобрести алкоголь");
-                    return totalPrice - totalPriceOfAl0cohol;
+                    return totalPrice - totalPriceOfAlcohol;
                 }
                 ((StopList) product).stop("Запрет на продажу алкоголя");
                 totalPrice = 0;
