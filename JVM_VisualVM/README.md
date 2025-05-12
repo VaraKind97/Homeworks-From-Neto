@@ -7,19 +7,30 @@
 ClassLoader'ы,
 области памяти (стэк (и его фреймы), хип, метаспейс)
 сборщик мусора
+
 Код для исследования
-public class JvmComprehension {
 
-    public static void main(String[] args) {
-        int i = 1;                      // 1
-        Object o = new Object();        // 2
-        Integer ii = 2;                 // 3
-        printAll(o, i, ii);             // 4
-        System.out.println("finished"); // 7
-    }
+public class JvmComprehension { // сначала загружаются системные классы в Metaspace (там хранятся классы, методы и константы).  
+ClassLoader'ы
+1)Bootstrap ClassLoader (сначала загрузка начинается с него, так как он загружается классы стандартной библиотеки), 2) Platform (внешние классы), 3) Application. Они ленивые, так как "сваливают" работу друг на друга, если не могут что-то подгрузить. Существуют Пользовательские КлассЛоадеры. После следует Linking и Инициализация (статические поля).
 
-    private static void printAll(Object o, int i, Integer ii) {
-        Integer uselessVar = 700;                   // 5
-        System.out.println(o.toString() + i + ii);  // 6
+    public static void main(String[] args) { // для мэйн на стэке создается фрейм(кадр), затем метод printAll, потом новый фрейм... Стэк не бесконечен, память может закончиться (например, из-за рекурсии);
+    
+        int i = 1;                      // 1 -Информация о переменных появляется на стэке. Из метода printAll обратиться к i не получится, так как она в main, в метод printAll передается "1". Фреймы разные.
+        
+        Object o = new Object();        // 2 -сначала выполняется правая часть (ссылочные данные создаются в куче); Объект О - в main; Object - в куче
+        
+        Integer ii = 2;                 // 3 Integer - объект в куче; ii - в мэйн; 1 - в printAll
+        
+        printAll(o, i, ii);             // 4- в стэке появляется фрейм-метод printAll
+        
+        System.out.println("finished"); // 7 - новый фрейм на стэке, куда передадим ссылку на str.
+    } по ходу работы программы отрабатывает Сборщик мусора (может остановить ее для "уборки").
+
+    private static void printAll(Object o, int i, Integer ii) { Создается новый фрейм; О и param ссылаются на Object. Так же и с ii, i - в мэйне (стэк), int, integer - в куче в качестве объектов
+    
+        Integer uselessVar = 700;            // 5 - Integer - объект в куче; uselessVar - в мэйн; 700 - в printAll
+        
+        System.out.println(o.toString() + i + ii);  // 6 - новый фрейм на стэке (println).
     }
-}
+}  СБОРЩИК МУСОРА - лучше сччитать ссылки друг на друга; Объекты, до которых не добрались - будут удалены; удалется многоступенчато; есть 4-5 сборщиков (+неофиц)
