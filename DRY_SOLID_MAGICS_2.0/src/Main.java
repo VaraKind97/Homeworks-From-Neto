@@ -1,22 +1,22 @@
-    import java.util.ArrayList;
-    import java.util.Iterator;
-    import java.util.Scanner;
-    
-    public class Main {
-    
-        private static final String RUB = "рублей";
-        private static ArrayList<Product> menu;
-    
-        public static void main(String[] args) {
-            menu = new ArrayList<Product>();
-            menu.add(new Salad("Витаминный салат", 350, "230гр"));
-            menu.add(new Salad("Салат Греческий", 400, "250гр"));
-            menu.add(new Meat("Стейк Стриплойнд", 1000, "250гр"));
-            menu.add(new Meat("Стейк Шато Бриан", 1100, "250гр"));
-            menu.add(new NonAlcohol("Кола", 150, "0.33л"));
-            menu.add(new NonAlcohol("Святой источник", 40, "1л"));
-            menu.add(new Alcohol("Пиво", 100, "0.5л"));
-            menu.add(new Alcohol("Вино", 500, "0.3л"));
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
+
+public class Main {
+
+    private static final String RUB = "рублей";
+    private static ArrayList<Product> menu;
+
+    public static void main(String[] args) {
+        menu = new ArrayList<Product>();
+        menu.add(new Salad("Витаминный салат", 350, "230гр"));
+        menu.add(new Salad("Салат Греческий", 400, "250гр"));
+        menu.add(new Meat("Стейк Стриплойнд", 1000, "250гр"));
+        menu.add(new Meat("Стейк Шато Бриан", 1100, "250гр"));
+        menu.add(new NonAlcohol("Кола", 150, "0.33л"));
+        menu.add(new NonAlcohol("Святой источник", 40, "1л"));
+        menu.add(new Alcohol("Пиво", 100, "0.5л"));
+        menu.add(new Alcohol("Вино", 500, "0.3л"));
         System.out.println("Добро пожаловать в онлайн-ресторан!\n");
         printMenu();
         Scanner scanner = new Scanner(System.in);
@@ -61,7 +61,7 @@
             Product product = it.next();
             totalPrice += product.getCount() * product.getPrice();
             if (product instanceof Alcohol) {
-                int priceOfAlcohol = ((Alcohol) product).getPrice();
+                int priceOfAlcohol = product.getPrice();
                 int totalPriceOfAlcohol = priceOfAlcohol * product.getCount();
                 ((Drink) product).checkAge("Введите ваш возраст!");
                 Scanner scanner = new Scanner(System.in);
