@@ -1,22 +1,22 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Scanner;
-
-public class Main {
-
-    private static final String RUB = "рублей";
-    private static ArrayList<Product> menu;
-
-    public static void main(String[] args) {
-        menu = new ArrayList<Product>();
-        menu.add(new Salad("Витаминный салат", 350, "230гр"));
-        menu.add(new Salad("Салат Греческий", 400, "250гр"));
-        menu.add(new Meat("Стейк Стриплойнд", 1000, "250гр"));
-        menu.add(new Meat("Стейк Шато Бриан", 1100, "250гр"));
-        menu.add(new NonAlcohol("Кола", 150, "0.33л"));
-        menu.add(new NonAlcohol("Святой источник", 40, "1л"));
-        menu.add(new Alcohol("Пиво", 100, "0.5л"));
-        menu.add(new Alcohol("Вино", 500, "0.3л"));
+    import java.util.ArrayList;
+    import java.util.Iterator;
+    import java.util.Scanner;
+    
+    public class Main {
+    
+        private static final String RUB = "рублей";
+        private static ArrayList<Product> menu;
+    
+        public static void main(String[] args) {
+            menu = new ArrayList<Product>();
+            menu.add(new Salad("Витаминный салат", 350, "230гр"));
+            menu.add(new Salad("Салат Греческий", 400, "250гр"));
+            menu.add(new Meat("Стейк Стриплойнд", 1000, "250гр"));
+            menu.add(new Meat("Стейк Шато Бриан", 1100, "250гр"));
+            menu.add(new NonAlcohol("Кола", 150, "0.33л"));
+            menu.add(new NonAlcohol("Святой источник", 40, "1л"));
+            menu.add(new Alcohol("Пиво", 100, "0.5л"));
+            menu.add(new Alcohol("Вино", 500, "0.3л"));
         System.out.println("Добро пожаловать в онлайн-ресторан!\n");
         printMenu();
         Scanner scanner = new Scanner(System.in);
@@ -34,9 +34,9 @@ public class Main {
 
     private static void printMenu() {
         System.out.println("Меню:");
-        Iterator<Product> iterator = menu.listIterator();
-        while (iterator.hasNext()) {
-            Product product = iterator.next();
+        Iterator<Product> it = menu.listIterator();
+        while (it.hasNext()) {
+            Product product = it.next();
             System.out.print(product.getName() + ", ");
             System.out.print(product.getPrice() + " " + RUB + ", ");
             System.out.println(product.getWeight() + " ");
@@ -45,9 +45,9 @@ public class Main {
 
     private static void printOrderList() {
         System.out.println("\nВаш заказ:");
-        Iterator<Product> iterator = menu.listIterator();
-        while (iterator.hasNext()) {
-            Product product = iterator.next();
+        Iterator<Product> it = menu.listIterator();
+        while (it.hasNext()) {
+            Product product = it.next();
             if (product.getCount() > 0) {
                 System.out.print(product.getName() + "- " + product.getCount() + " шт. \n");
             }
@@ -56,14 +56,27 @@ public class Main {
 
     private static int getOrderPrice() {
         int totalPrice = 0;
-        Iterator<Product> iterator = menu.listIterator();
-        while (iterator.hasNext()) {
-            Product product = iterator.next();
+        Iterator<Product> it = menu.listIterator();
+        while (it.hasNext()) {
+            Product product = it.next();
             totalPrice += product.getCount() * product.getPrice();
+            if (product instanceof Alcohol) {
+                int priceOfAl0cohol = ((Alcohol) product).getPrice();
+                int totalPriceOfAl0cohol = priceOfAl0cohol * product.getCount();
+                ((Drink) product).checkAge("Введите ваш возраст!");
+                Scanner scanner = new Scanner(System.in);
+                int age = scanner.nextInt();
+                if (age < 18) {
+                    System.out.println("Вы несовершеннолетний и не можете приобрести алкоголь");
+                    return totalPrice - totalPriceOfAl0cohol;
+                }
+                ((StopList) product).stop("Запрет на продажу алкоголя");
+                totalPrice = 0;
+            }
+
         }
         return totalPrice;
     }
 }
-
 
 
