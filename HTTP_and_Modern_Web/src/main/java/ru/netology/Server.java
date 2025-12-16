@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.HashMap;
+import java.net.URISyntaxException;
 
 public class Server {
     private final int port;
@@ -52,41 +53,51 @@ public class Server {
     }
 
     private void connection(Socket socket) {
-            try (final var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                 final var out = new BufferedOutputStream(socket.getOutputStream())) {
-                final var requestLine = in.readLine();
-                final var parts = requestLine.split(" ");
-                if (parts.length != 3) {
-                    socket.close();
-                    return;
-                }
+        try (final var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             final var out = new BufferedOutputStream(socket.getOutputStream())) {
+            final var requestLine = in.readLine();
+            final var parts = requestLine.split(" ");
+            String method = parts[0];
+            final var path = parts[1];
+            Request request = new Request(method, path);
+            var param = request.getQueryParam("last");
+            var params = request.getQueryParams();
 
-                String method = parts[0];
-                final var path = parts[1];
-                Request request = new Request(method, path);
-            if (request == null || !handlers.containsKey(request.getMethod())) {
-                responseWithoutContent(out, "404", "Not found");
+            if (!params.isEmpty()) {
+                System.out.println(param);
+                System.out.println(params);
             }
+            System.out.println(path);
+
+            if (!handlers.containsKey(request.getMethod())) {
+                responseWithoutContent(out, String.valueOf(404), "Not found");
+                return;
+            }
+
             Map<String, Handler> handlerMap = handlers.get(request.getMethod());
-            String requestPath = request.getPath();
-            if (handlerMap.containsKey(requestPath)) {
-                Handler handler = handlerMap.get(requestPath);
+            String pathRequest = request.getPath();
+
+            if(handlerMap.containsKey(pathRequest)) {
+                Handler handler = handlerMap.get(pathRequest);
                 handler.handle(request, out);
             } else {
                 if (!validPaths.contains(request.getPath())) {
-                    responseWithoutContent(out, "404", "Not found");
+                    //404
+                    responseWithoutContent(out, String.valueOf(404), "Not found");
                 } else {
                     defaultHandler(out, path);
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
         }
     }
 
     protected void defaultHandler(BufferedOutputStream out, String path) throws IOException {
         final var filePath = Path.of(".", "public", path);
         final var mimeType = Files.probeContentType(filePath);
+
         // special case for classic
         if (path.equals("/classic.html")) {
             final var template = Files.readString(filePath);
@@ -135,5 +146,6 @@ public class Server {
         handlers.get(method).put(path, handler);
     }
 }
+
 
 
